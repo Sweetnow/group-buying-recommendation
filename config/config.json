@@ -1,0 +1,71 @@
+{
+    "comment": "固定参数",
+    "user": "user",
+    "visdom": {
+        "server": "127.0.0.1",
+        "port": {
+            "BeiBei_itemrec": 16670,
+            "BeiBei_grouprec": 16670,
+            "BeiBei_SIGR": 16670,
+            "BeiBei": 16670,
+            "comment": "16671 is temporary"
+        }
+    },
+    "training": {
+        "test_interval": 5,
+        "early_stop": 50,
+        "overfit": {
+            "protected_epoch": 10,
+            "threshold": 1
+        }
+    },
+    "dataset": {
+        "path": "./BeiBei",
+        "seed": 123,
+        "use_backup": true
+    },
+    "logger": {
+        "path": "./log",
+        "policy": "best"
+    },
+    "metric": {
+        "target": {
+            "type": "NDCG",
+            "topk": 10
+        },
+        "metrics": [
+            {
+                "type": "Recall",
+                "topk": 3
+            },
+            {
+                "type": "Recall",
+                "topk": 5
+            },
+            {
+                "type": "Recall",
+                "topk": 10
+            },
+            {
+                "type": "Recall",
+                "topk": 20
+            },
+            {
+                "type": "NDCG",
+                "topk": 3
+            },
+            {
+                "type": "NDCG",
+                "topk": 5
+            },
+            {
+                "type": "NDCG",
+                "topk": 10
+            },
+            {
+                "type": "NDCG",
+                "topk": 20
+            }
+        ]
+    }
+}
