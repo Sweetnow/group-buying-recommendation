@@ -20,7 +20,7 @@
         }
     },
     "dataset": {
-        "path": "./BeiBei",
+        "path": "./datasets",
         "seed": 123,
         "use_backup": true
     },

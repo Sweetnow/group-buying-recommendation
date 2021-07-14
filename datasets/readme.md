@@ -36,7 +36,13 @@ Due to the file size limitation, the negative sample files corresponding to `tun
 If you want to use our dataset in your research, please cite:
 
 ```
-
+@inproceedings{zhang2021group,
+  title={Group-Buying Recommendation for Social E-Commerce},
+  author={Zhang, Jun and Gao, Chen and Jin, Depeng and Li, Yong},
+  booktitle={2021 IEEE 37th International Conference on Data Engineering (ICDE)},
+  year={2021},
+  organization={IEEE}
+}
 ```
 
 

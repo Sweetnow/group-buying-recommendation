@@ -27,6 +27,31 @@ Both modules mentioned in `requirements.txt` and `librecframework` should be ins
 
 More details about our codes will be added soon.
 
+### Usage
+
+1. Download both `librecframework` and this repo
+```bash
+git clone git@github.com:Sweetnow/librecframework.git
+git@github.com:Sweetnow/group-buying-recommendation.git
+```
+
+2. Install `librecframework`
+```bash
+cd librecframework/
+pip install . --user
+```
+
+3. Download `negative.zip` from [Release](https://github.com/Sweetnow/group-buying-recommendation/releases/download/v1.0/negative.zip), unzip it and copy `*.negative.txt` to `datasets/BeiBei/`
+```bash
+wget https://github.com/Sweetnow/group-buying-recommendation/releases/download/v1.0/negative.zip
+unzip negative.zip
+cp negative/* ${PATH-TO-GROUP-BUYING-RECOMMENDATION}/datasets/BeiBei
+```
+
+*PS: negative sampling file is used for testing. More details can be found in [Datasets README](./datasets/readme.md)*
+
+4. 
+
 ### Citation
 
 If you want to use our codes or dataset in your research, please cite:
