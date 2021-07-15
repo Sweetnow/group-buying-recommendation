@@ -1,14 +1,10 @@
 {
-    "comment": "固定参数",
+    "comment": "Experiment Parameters",
     "user": "user",
     "visdom": {
-        "server": "127.0.0.1",
+        "server": "",
         "port": {
-            "BeiBei_itemrec": 16670,
-            "BeiBei_grouprec": 16670,
-            "BeiBei_SIGR": 16670,
-            "BeiBei": 16670,
-            "comment": "16671 is temporary"
+            "BeiBei": 16670
         }
     },
     "training": {

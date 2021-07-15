@@ -32,14 +32,16 @@ More details about our codes will be added soon.
 1. Download both `librecframework` and this repo
 ```bash
 git clone git@github.com:Sweetnow/librecframework.git
-git@github.com:Sweetnow/group-buying-recommendation.git
+git clone git@github.com:Sweetnow/group-buying-recommendation.git
 ```
 
-2. Install `librecframework`
+2. Install `librecframework` (**Python >= 3.8**)
 ```bash
 cd librecframework/
-pip install . --user
+bash install.sh
 ```
+
+3. Install [dgl](https://www.dgl.ai/pages/start.html)
 
 3. Download `negative.zip` from [Release](https://github.com/Sweetnow/group-buying-recommendation/releases/download/v1.0/negative.zip), unzip it and copy `*.negative.txt` to `datasets/BeiBei/`
 ```bash
@@ -50,7 +52,16 @@ cp negative/* ${PATH-TO-GROUP-BUYING-RECOMMENDATION}/datasets/BeiBei
 
 *PS: negative sampling file is used for testing. More details can be found in [Datasets README](./datasets/readme.md)*
 
-4. 
+4. Set `config/config.json` and `config/pretrain.json` following [Docs](https://github.com/Sweetnow/librecframework#example).
+
+5. Run the following command to know the CLI and check python environment:
+```bash
+python3 GBGCN train -h
+# or
+# python3 GBGCN test -h
+```
+
+*PS: If you set hyperparameters that support multi input to multi values, the framework will automatically do grid-search accroding to your input. That is, use the Cartesian product of the hyperparameters for training and testing. For example, set `--lr 0.1 0.01 -L 1 2`, the codes will train and test model with hyperparameters \[(0.1, 1), (0.1, 2), (0.01, 1), (0.01, 2)\].*
 
 ### Citation
 

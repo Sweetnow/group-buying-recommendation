@@ -9,7 +9,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import dgl
-from dgl import DGLGraph
 import dgl.function as fn
 from librecframework.argument.manager import HyperparamManager
 from librecframework.pipeline import DefaultLeaveOneOutPipeline
@@ -33,7 +32,7 @@ class GCNLayer(nn.Module):
     def __init__(self):
         super().__init__()
 
-    def forward(self, graph: DGLGraph, embeddings: torch.Tensor) -> torch.Tensor:
+    def forward(self, graph: dgl.DGLGraph, embeddings: torch.Tensor) -> torch.Tensor:
         # pylint: disable=E1101
         graph = graph.local_var()
 
@@ -51,18 +50,22 @@ class GBGCN(EmbeddingBasedModel):
             self,
             info,
             dataset: TrainDataset,
-            prtc_item_graph: DGLGraph,
-            init_item_graph: DGLGraph,
-            prtc_to_init_graph: DGLGraph,
-            init_to_prtc_graph: DGLGraph,
+            prtc_item_graph: dgl.DGLGraph,
+            init_item_graph: dgl.DGLGraph,
+            prtc_to_init_graph: dgl.DGLGraph,
+            init_to_prtc_graph: dgl.DGLGraph,
             social_graph: torch.Tensor):
         super().__init__(info, dataset, create_embeddings=True)
         self._bpr_loss = BPRLoss('none')
 
-        self.prtc_item_graph = prtc_item_graph
-        self.init_item_graph = init_item_graph
-        self.prtc_to_init_graph = prtc_to_init_graph
-        self.init_to_prtc_graph = init_to_prtc_graph
+        self._SocialL2 = L2Loss(info.SL2)
+        self.social_graph = social_graph.cuda()
+        device = self.social_graph.device
+
+        self.prtc_item_graph = prtc_item_graph.to(device)
+        self.init_item_graph = init_item_graph.to(device)
+        self.prtc_to_init_graph = prtc_to_init_graph.to(device)
+        self.init_to_prtc_graph = init_to_prtc_graph.to(device)
         self.gcn = GCNLayer()
         self.layer = self.info.layer
 
@@ -93,9 +96,6 @@ class GBGCN(EmbeddingBasedModel):
         self.alpha = self.info.alpha
         self.beta = self.info.beta
         self.eps = 1e-8
-
-        self._SocialL2 = L2Loss(info.SL2)
-        self.social_graph = social_graph.cuda()
 
     def load_pretrain(self, pretrain_info: Dict[str, Any]) -> None:
         path = pretrain_info['GBMF']
@@ -495,7 +495,7 @@ if __name__ == "__main__":
 
     num_ps = pipeline.train_data.num_ps
     num_qs = pipeline.train_data.num_qs
-    init_item_graph = DGLGraph(complete_graph_from_pq(
+    init_item_graph = dgl.from_scipy(complete_graph_from_pq(
         pipeline.train_data.ground_truth,
         sp.coo_matrix(([], ([], [])), shape=(num_ps, num_ps)),
         sp.coo_matrix(([], ([], [])), shape=(num_qs, num_qs)),
@@ -514,7 +514,7 @@ if __name__ == "__main__":
     values = np.ones(len(pos_pairs), dtype=np.float32)
     participant_ground_truth = sp.coo_matrix(
         (values, (indice[:, 0], indice[:, 1])), shape=(num_ps, num_qs))
-    prtc_item_graph = DGLGraph(complete_graph_from_pq(
+    prtc_item_graph = dgl.from_scipy(complete_graph_from_pq(
         participant_ground_truth,
         sp.coo_matrix(([], ([], [])), shape=(num_ps, num_ps)),
         sp.coo_matrix(([], ([], [])), shape=(num_qs, num_qs)),
@@ -524,8 +524,8 @@ if __name__ == "__main__":
         normalize='none'
     ))
 
-    prtc_to_init_graph = DGLGraph()
-    init_to_prtc_graph = DGLGraph()
+    prtc_to_init_graph = dgl.graph(([],[]))
+    init_to_prtc_graph = dgl.graph(([], []))
     prtc_to_init_graph.add_nodes(num_ps)
     init_to_prtc_graph.add_nodes(num_ps)
     for one in pipeline.train_data.records:
